@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar, ActivityIndicator } from "react-native";
 import KeyboardAvoider from "../../component/KeyboardAvoider/KeyboardAvoider";
 import { Formik } from "formik";

@@ -22,10 +22,13 @@
     "components": "^0.1.0",
     "constants": "^0.0.2",
     "expo": "^51.0.0",
+    "expo-auth-session": "~5.5.2",
     "expo-camera": "~15.0.9",
     "expo-contacts": "~13.0.3",
+    "expo-crypto": "~13.0.2",
     "expo-sensors": "~13.0.7",
     "expo-status-bar": "~1.12.1",
+    "expo-web-browser": "~13.0.3",
     "formik": "^2.4.5",
     "jest": "^29.3.1",
     "jest-expo": "~51.0.2",
@@ -40,9 +43,7 @@
     "react-native-web": "~0.19.11",
     "styled": "^1.0.0",
     "styled-components": "^6.1.8",
-    "expo-auth-session": "~5.5.2",
-    "expo-crypto": "~13.0.2",
-    "expo-web-browser": "~13.0.3"
+    "expo-dev-client": "~4.0.14"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

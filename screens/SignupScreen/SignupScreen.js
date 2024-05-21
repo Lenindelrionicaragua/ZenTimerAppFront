@@ -16,13 +16,18 @@ import {
   FooterView,
   FooterText,
   FooterLink,
-  FooterLinkContent
+  FooterLinkContent,
 } from "./SignupScreenStyles";
 import { Colors } from "../../styles/AppStyles";
 import { logError, logInfo } from "../../util/logging";
 import TextInputSignupScreen from "../../component/TextInputSignupScreen/TextInputSignupScreen";
 // API client
 import axios from "axios";
+import {
+  GoogleSignIn,
+  GoogleSignInButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 
 // Colors
 const { white, lightGrey } = Colors;
@@ -35,6 +40,10 @@ const SignupScreen = ({ navigation }) => {
 
   const [msg, setMsg] = useState("");
   const [success, setSuccessStatus] = useState("");
+
+  // google signIn
+  const [error, setError] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -56,7 +65,7 @@ const SignupScreen = ({ navigation }) => {
       name: values.name,
       email: values.email,
       password: values.password,
-      dateOfBirth: values.dateOfBirth
+      dateOfBirth: values.dateOfBirth,
     };
 
     const url =
@@ -64,7 +73,7 @@ const SignupScreen = ({ navigation }) => {
 
     axios
       .post(url, { user: credentials })
-      .then(response => {
+      .then((response) => {
         const { success, msg, user } = response.data;
 
         if (success) {
@@ -75,11 +84,11 @@ const SignupScreen = ({ navigation }) => {
           handleMessage({ successStatus: true, msg: msg });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         logError(error.response.data.msg);
         handleMessage({
           successStatus: false,
-          msg: error.response.data.msg
+          msg: error.response.data.msg,
         });
       })
       .finally(() => {
@@ -90,6 +99,34 @@ const SignupScreen = ({ navigation }) => {
   const handleMessage = ({ successStatus, msg }) => {
     setSuccessStatus(successStatus);
     setMsg(msg);
+  };
+
+  const configureGoogleSignIn = () => {
+    GoogleSignIn.configure({
+      webClientId:
+        "809713703422-4god00kad8ju78870io15917pulnj26c.apps.googleusercontent.com",
+      androidClientId:
+        "809713703422-v67nj19lic0vcjd1jki0usku5535qhcr.apps.googleusercontent.com",
+      iosClientId:
+        "809713703422-5qnfgkrc56kugvqromu9m5pbtrb17pha.apps.googleusercontent.com",
+    });
+  };
+
+  useEffect(() => {
+    configureGoogleSignIn();
+  });
+
+  const signIn = async () => {
+    console.log("Pressed Sign in");
+
+    try {
+      await GoogleSignIn.hasPlayServices();
+      const userInfo = await GoogleSignIn.signIn();
+      setUserInfo(userInfo);
+      setError();
+    } catch (error) {
+      setError(e);
+    }
   };
 
   return (
@@ -117,7 +154,7 @@ const SignupScreen = ({ navigation }) => {
               email: "",
               dateOfBirth: "",
               password: "",
-              confirmPassword: ""
+              confirmPassword: "",
             }}
             onSubmit={(values, { setSubmitting }) => {
               values = { ...values, dateOfBirth: userBirthDay };
@@ -144,7 +181,7 @@ const SignupScreen = ({ navigation }) => {
                     name: values.name,
                     email: values.email,
                     password: values.password,
-                    dateOfBirth: dateOfBirthString
+                    dateOfBirth: dateOfBirthString,
                   },
                   setSubmitting
                 );
@@ -157,7 +194,7 @@ const SignupScreen = ({ navigation }) => {
               handleBlur,
               handleSubmit,
               values,
-              isSubmitting
+              isSubmitting,
             }) => (
               <StyledFormArea>
                 <TextInputSignupScreen
@@ -240,7 +277,11 @@ const SignupScreen = ({ navigation }) => {
                 )}
 
                 {isSubmitting && (
-                  <StyledButton disabled={true} testID="signup-styled-button">
+                  <StyledButton
+                    disabled={true}
+                    testID="signup-styled-button"
+                    onPress={signIn}
+                  >
                     <ActivityIndicator size="large" color={white} />
                   </StyledButton>
                 )}

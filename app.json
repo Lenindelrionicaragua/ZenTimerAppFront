@@ -12,13 +12,18 @@
       "backgroundColor": "#000"
     },
     "assetBundlePatterns": ["**/*"],
+    "plugins": ["@react-native-google-signin/google-signin"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.zentimer.app",
-      "config": {
-        "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.809713703422-5qnfgkrc56kugvqromu9m5pbtrb17pha"
-        }
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.809713703422-5qnfgkrc56kugvqromu9m5pbtrb17pha"
+            ]
+          }
+        ]
       }
     },
     "android": {
